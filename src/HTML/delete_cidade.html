@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cidade (delete)</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="estilo2.css">
+    </head>
+    <body>
+        <p><a href="site.html">&lt; Voltar para página inicial</a></p>
+        <h1>Apagar cidade</h1>
+        <table>
+            <tr>
+            </tr>
+            <td>ID:</td>
+            <td id="idCidade"></td>
+            <tr>
+                <td>Nome:</td>
+                <td id="nomeCidade"></td>
+            </tr>
+            <tr>
+                <td>Estado:</td>
+                <td id="estadoCidade"></td>
+            </tr>
+            <tr>
+                <td>País:</td>
+                <td id="paisCidade"></td>
+            </tr>
+            <tr>
+                <td>População:</td>
+                <td id="populacaoCidade"></td>
+            </tr>
+            <tr><td></td><td><input type="button" onclick="apagarCidade()" value="Apagar"></td></tr>
+        </table>
+        <p style="font-weight:bold" id="mensagem"></p>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Estado</th>
+                <th>País</th>
+                <th>População</th>
+            </tr>
+            <tbody id="cidades">
+            </tbody>
+        </table>
+        <script>
+            const corpoTabela = document.querySelector('#cidades');
+            const paragrafoMensagem = document.querySelector('#mensagem');
+            const celulaNome = document.querySelector('#nomeCidade');
+            const celulaEstado = document.querySelector('#estadoCidade');
+            const celulaPais = document.querySelector('#paisCidade');
+            const celulaPopulacao = document.querySelector('#populacaoCidade');
+            const celulaID = document.querySelector('#idCidade');
+            function inicializar() {
+                paragrafoMensagem.innerHTML = 'Selecione uma cidade:'
+                celulaID.innerHTML = '';
+                celulaNome.innerHTML = '';
+                celulaEstado.innerHTML = '';
+                celulaPais.innerHTML = '';
+                celulaPopulacao.innerHTML = '';
+                listarTodasCidades();
+            }
+            function selecionarCidade(id, nome, estado, pais, populacao) {
+                paragrafoMensagem.innerHTML = 'Pressione o botão Apagar para remover a cidade.'
+                celulaID.innerHTML = id;
+                celulaNome.innerHTML = nome;
+                celulaEstado.innerHTML = estado;
+                celulaPais.innerHTML = pais;
+                celulaPopulacao.innerHTML = populacao;
+            }
+            async function apagarCidade() {
+                if (celulaID.innerHTML == '') return;
+                const ID = celulaID.innerHTML;
+                const URL = `/api/cidades/${ID}`;
+                const deleteRequest = {
+                    method:'DELETE'
+                };
+                try {
+                    fetch(URL, deleteRequest).then(resposta => inicializar());
+                } catch (e) {
+                    corpoTabela.innerHTML = e;
+                }
+            }
+            function preencherTabela(cidades) {
+                var linhasTabela = '';
+                var n = cidades.length;
+                for (var i = 0; i < n; i++) {
+                    var cidade = cidades[i];
+                    linhasTabela +=
+                        `<tr><td><a href="javascript:void(0)" onclick="selecionarCidade('${cidade.id}','${cidade.nome}','${cidade.estado}','${cidade.pais}','${cidade.populacao}')">`
+                        + cidade.id + '</a></td>' +
+                        '<td>' + cidade.nome + '</td>' +
+                        '<td>' + cidade.estado + '</td>' +
+                        '<td>' + cidade.pais + '</td>' +
+                        '<td>' + cidade.populacao + '</td></tr>\n';
+                }
+                corpoTabela.innerHTML = linhasTabela;
+            }
+            async function listarTodasCidades() {
+                const URL = `/api/cidades`;
+                try {
+                    fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+                } catch (e) {
+                    corpoTabela.innerHTML = e;
+                }
+            }
+            inicializar();
+        </script>
+    </body>
+</html>

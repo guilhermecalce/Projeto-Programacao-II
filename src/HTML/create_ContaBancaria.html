@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ContaBancaria (create)</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/site/sakura.css">
+    </head>
+    <body>
+        <p><a href="site.html">&lt; Voltar para página inicial</a></p>
+        <h1>Nova Conta Bancária</h1>
+        <table>
+            <tr>
+                <td>Nome do Titular:</td>
+                <td><input type="text" id="txtNomeT"></td>
+            </tr>
+            <tr>
+                <td>Saldo:</td>
+                <td><input type="text" id="txtSaldo"></td>
+            </tr>
+            <tr>
+                <td>Número da Agência:</td>
+                <td><input type="text" id="txtNumero"></td>
+            </tr>
+            <tr><td></td><td><input type="button" onclick="criarConta()" value="Criar"></td></tr>
+        </table>
+        <p style="font-weight:bold" id="mensagem"></p>
+        <script>
+            const textoNomeT = document.querySelector('#txtNomeT');
+            const textoSaldo = document.querySelector('#txtSaldo');
+            const textoNumero = document.querySelector('#txtNumero');
+            const paragrafoMensagem = document.querySelector('#mensagem');
+            function mostrarMensagem(contaCadastrada) {
+                textoNomeT.value = '';
+                textoSaldo.value = '';
+                textoNumero.value = '';
+                paragrafoMensagem.innerHTML = 'Conta bancária criada com id ' + contaCadastrada.id;
+            }
+            async function criarConta() {
+                const URL = `/api/contasbancaria`;
+                const dadosConta = {
+                    'nome': textoNomeT.value,
+                    'saldo': textoSaldo.value,
+                    'numero': textoNumero.value
+                };
+                const postRequest = {
+                    method:'POST',
+                    body: JSON.stringify(dadosConta),
+                    headers: { 'Content-type': 'application/json;charset=UTF-8' }
+                };
+                try {
+                    fetch(URL, postRequest).then(resposta => resposta.json()).then(jsonResponse => mostrarMensagem(jsonResponse));
+                } catch (e) {
+                    corpoTabela.innerHTML = e;
+                }
+            }
+        </script>
+    </body>
+</html>

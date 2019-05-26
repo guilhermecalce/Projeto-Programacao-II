@@ -1,12 +1,10 @@
 
 package Classes;
 
-//inserindo comentarios para teste
-//1
-//2
+
 import java.sql.*;
 
-public class Cidade{
+public class Cidade {
 
     private int id;
     private String nome;
