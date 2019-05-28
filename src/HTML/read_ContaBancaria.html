@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ContaBancaria (read)</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/site/sakura.css">
+    </head>
+    <body>
+        <p><a href="site.html">&lt; Voltar para página inicial</a></p>
+        <h1>Conta Bancária</h1>
+        <p style="font-weight:bold" id="contador"></p>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Saldo</th>
+                <th>Número</th>
+            </tr>
+            <tbody id="contas">
+            </tbody>
+        </table>
+        <script>
+            const corpoTabela = document.querySelector('#contas');
+            const contadorParagraph = document.querySelector('#contador');
+            function preencherTabela(contas) {
+                var linhasTabela = '';
+                var n = contas.length;
+                for (var i = 0; i < n; i++) {
+                    var conta = contas[i];
+                    linhasTabela += '<tr><td>' + conta.id + '</td>' +
+                        '<td>' + conta.nome + '</td>' +
+                        '<td>' + conta.saldo + '</td>' +
+                        '<td>' + conta.numero + '</td></tr>\n';
+                }
+                corpoTabela.innerHTML = linhasTabela;
+                contadorParagraph.innerHTML = n + ' ' + (n==1?'conta':'contas');
+            }
+            async function listarTodasContas() {
+                const URL = `/api/contasbancaria`;
+                try {
+                    fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+                } catch (e) {
+                    corpoTabela.innerHTML = e;
+                }
+            }
+            listarTodasContas();
+        </script>
+    </body>
+</html>
