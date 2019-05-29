@@ -3,7 +3,7 @@
     <head>
         <title>ContaBancaria (read)</title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="/site/sakura.css">
+        <link rel="stylesheet" type="text/css" href="estilo2.css">
     </head>
     <body>
         <p><a href="site.html">&lt; Voltar para página inicial</a></p>
@@ -23,6 +23,7 @@
             const corpoTabela = document.querySelector('#contas');
             const contadorParagraph = document.querySelector('#contador');
             function preencherTabela(contas) {
+                    debugger
                 var linhasTabela = '';
                 var n = contas.length;
                 for (var i = 0; i < n; i++) {
